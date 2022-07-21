@@ -1,0 +1,97 @@
+#Ansible-playbook for installation
+#Java, Jenkins and Docker on Master, Test and Production nodes
+artford@Artford-Pc:~/Downloads$ ssh -i "jen-master.pem" ubuntu@ec2-3-88-201-254.compute-1.amazonaws.com
+ubuntu@ip-172-31-20-104:~$ ls
+ansible  case-study  project
+ubuntu@ip-172-31-20-104:~$ cd ansible/
+ubuntu@ip-172-31-20-104:~/ansible$ ls
+install.yml  roles
+ubuntu@ip-172-31-20-104:~/ansible$ cat install.yml 
+---
+- hosts: localhost
+  name: master installations
+  become: true
+  roles:
+  - roles/java
+  - roles/jenkins
+
+- hosts: testc
+  name: testc installations
+  become: true
+  roles:
+  - roles/java
+  - roles/docker
+
+- hosts: prodc
+  name: prodc installations 
+  become: true
+  roles:
+  - roles/java
+  - roles/docker 
+  
+#java yaml file for Java Installation
+ubuntu@ip-172-31-20-104:~$ cd ansible/
+ubuntu@ip-172-31-20-104:~/ansible$ ls
+install.yml  roles
+ubuntu@ip-172-31-20-104:~/ansible$ cd roles/
+ubuntu@ip-172-31-20-104:~/ansible/roles$ ls
+docker  java  jenkins
+ubuntu@ip-172-31-20-104:~/ansible/roles$ cd java/
+ubuntu@ip-172-31-20-104:~/ansible/roles/java$ cd t
+-bash: cd: t: No such file or directory
+ubuntu@ip-172-31-20-104:~/ansible/roles/java$ cd tasks/
+ubuntu@ip-172-31-20-104:~/ansible/roles/java/tasks$ cat main.yml 
+---
+- name: get-apt repo update
+  apt:
+      update_cache: yes
+      
+- name: installing java-jdk
+  apt:
+      name: openjdk-11-jdk
+      state: present
+
+       
+ubuntu@ip-172-31-20-104:~/ansible/roles/java/tasks$ 
+
+#jenkins yaml file for jenkins Installation
+ubuntu@ip-172-31-20-104:~/ansible/roles/java/tasks$ cd ..
+ubuntu@ip-172-31-20-104:~/ansible/roles/java$ cd ..
+ubuntu@ip-172-31-20-104:~/ansible/roles$ cd jenkins/
+ubuntu@ip-172-31-20-104:~/ansible/roles/jenkins$ cd tasks/
+ubuntu@ip-172-31-20-104:~/ansible/roles/jenkins/tasks$ cat main.yml 
+---
+- name: get-apt repo update
+  apt:
+      update_cache: yes
+
+- name: ensure jenkins apt repository key is installed
+  apt_key: url=https://pkg.jenkins.io/debian-stable/jenkins.io.key state=present
+
+- name: ensure repository is configured  
+  apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present   
+
+- name: installing jenkins
+  apt: 
+     name: jenkins
+     update_cache: yes
+ubuntu@ip-172-31-20-104:~/ansible/roles/jenkins/tasks$ 
+
+#docker yaml file for docker installation
+ubuntu@ip-172-31-20-104:~/ansible/roles/jenkins/tasks$ cd ..
+ubuntu@ip-172-31-20-104:~/ansible/roles/jenkins$ cd ..
+ubuntu@ip-172-31-20-104:~/ansible/roles$ cd docker/
+ubuntu@ip-172-31-20-104:~/ansible/roles/docker$ cd tasks/
+ubuntu@ip-172-31-20-104:~/ansible/roles/docker/tasks$ cat main.yml 
+---
+- name: get-apt repo update
+  apt:
+      update_cache: yes
+
+- name: installing docker
+  apt:
+      name: docker.io
+      state: present
+ubuntu@ip-172-31-20-104:~/ansible/roles/docker/tasks$
+
+

@@ -1,0 +1,56 @@
+Dockerfile
+ubuntu@ip-172-31-20-104:~$ ls 
+ansible  case-study  project
+ubuntu@ip-172-31-20-104:~$ cd project/
+ubuntu@ip-172-31-20-104:~/project$ ls
+website
+ubuntu@ip-172-31-20-104:~/project$ cd website/
+ubuntu@ip-172-31-20-104:~/project/website$ ls
+Dockerfile  Jenkinsfile  images  index.html
+ubuntu@ip-172-31-20-104:~/project/website$ cat Dockerfile 
+
+FROM ubuntu
+
+RUN apt-get update
+
+RUN apt-get install apache2 -y
+
+ADD ./index.html /var/www/html
+
+ADD ./images/ /var/www/html/images/
+
+EXPOSE 80
+
+ENTRYPOINT apachectl -D FOREGROUND
+
+#Jenkinsfile
+ubuntu@ip-172-31-20-104:~/project/website$ cat Jenkinsfile 
+pipeline {
+    agent {
+        label 'testc'
+    }
+    stages {
+        stage('clone repo') {
+            steps {
+                echo 'cloning repo'
+                git branch: 'test', url: 'https://github.com/ArtfordU7174/website'
+            }
+        }
+        stage('code build') {
+            steps {
+                sh '''docker build . -t artford7174/jenkinsproject
+                       docker run -it -d artford7174/jenkinsproject
+                        docker rm -f $(docker ps -a -q)'''
+            }
+        
+        }
+        stage('testing code') {
+            steps {
+                sh 'docker run -it -d --name testing_website -p 81:80 artford7174/jenkinsproject'
+            }
+        }
+
+
+    }
+}
+ubuntu@ip-172-31-20-104:~/project/website$
