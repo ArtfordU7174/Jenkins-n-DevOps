@@ -1,0 +1,29 @@
+#Test index.html
+ubuntu@ip-172-31-20-104:~/project/website$ ls
+Dockerfile  Jenkinsfile  images  index.html
+ubuntu@ip-172-31-20-104:~/project/website$ cat i
+images/     index.html  
+ubuntu@ip-172-31-20-104:~/project/website$ cat index.html 
+<html>
+<head>
+<title> Intellipaat </title>
+</head>
+<body style = "background-image:url('images/github3.jpg'); background-size: 100%">
+<h2 ALIGN=CENTER>Hello world!, This is testing page for DevOps Capstone Project</h2>
+</body>
+</html>
+ubuntu@ip-172-31-20-104:~/project/website$
+
+#Production index.html
+ubuntu@ip-172-31-20-104:~/project/website$ cat index.html 
+<html>
+<head>
+<title> Intellipaat </title>
+</head>
+<body style = "background-image:url('images/github3.jpg'); background-size: 100%">
+<h2 ALIGN=CENTER>Hello world!</h2>
+</body>
+</html>
+ubuntu@ip-172-31-20-104:~/project/website$
+
+
